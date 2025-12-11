@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>markol.brand</title>
+    <!-- Иконка сайта - котик -->
+    <link rel="icon" href="catbezfona.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== ЦВЕТА ИЗ АВЫ ===== */
+        :root {
+            --black: #000000;
+            --cat-blue: #4fbbd9;
+            --cat-dark: #3f8290;
+            --glow: #5ccde8;
+            --deep-dark: #001d22;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.5;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Атмосферный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(79, 187, 217, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(92, 205, 232, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 29, 34, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Парящие частицы */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--glow);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0.1;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        /* ===== ШАПКА ===== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.2rem 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(79, 187, 217, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--glow);
+            text-shadow: 0 0 10px rgba(92, 205, 232, 0.5);
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a:hover {
+            color: var(--glow);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--glow);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* ===== ГЛАВНАЯ С АВОЙ ===== */
+        .main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-text {
+            flex: 1;
+            position: relative;
+        }
+
+        .main-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Стиль для авы */
+        .avatar-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            perspective: 1000px;
+        }
+
+        .avatar {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 60px rgba(92, 205, 232, 0.3),
+                0 0 120px rgba(0, 29, 34, 0.4),
+                inset 0 0 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            filter: brightness(1.1) contrast(1.1);
+            animation: avatar-float 6s ease-in-out infinite;
+        }
+
+        @keyframes avatar-float {
+            0%, 100% {
+                transform: translateY(0) rotateX(0deg) rotateY(0deg);
+                box-shadow: 
+                    0 0 60px rgba(92, 205, 232, 0.3),
+                    0 0 120px rgba(0, 29, 34, 0.4);
+            }
+            50% {
+                transform: translateY(-20px) rotateX(2deg) rotateY(1deg);
+                box-shadow: 
+                    0 0 80px rgba(92, 205, 232, 0.4),
+                    0 0 140px rgba(0, 29, 34, 0.5),
+                    0 0 200px rgba(0, 29, 34, 0.3);
+            }
+        }
+
+        .avatar-container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                var(--cat-blue) 0%, 
+                var(--glow) 25%, 
+                transparent 50%, 
+                var(--cat-dark) 75%, 
+                var(--deep-dark) 100%);
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(20px);
+            animation: border-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes border-glow {
+            0%, 100% {
+                opacity: 0.2;
+                filter: blur(20px);
+            }
+            50% {
+                opacity: 0.4;
+                filter: blur(25px);
+            }
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+
+        .glow {
+            color: var(--glow);
+            text-shadow: 
+                0 0 15px rgba(92, 205, 232, 0.7),
+                0 0 30px rgba(92, 205, 232, 0.5),
+                0 0 45px rgba(92, 205, 232, 0.3);
+            animation: text-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes text-pulse {
+            0%, 100% {
+                text-shadow: 
+                    0 0 15px rgba(92, 205, 232, 0.7),
+                    0 0 30px rgba(92, 205, 232, 0.5),
+                    0 0 45px rgba(92, 205, 232, 0.3);
+            }
+            50% {
+                text-shadow: 
+                    0 0 20px rgba(92, 205, 232, 0.8),
+                    0 0 40px rgba(92, 205, 232, 0.6),
+                    0 0 60px rgba(92, 205, 232, 0.4);
+            }
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            line-height: 1.6;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.2rem;
+            background: transparent;
+            border: 2px solid var(--cat-blue);
+            color: var(--glow);
+            text-decoration: none;
+            border-radius: 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(92, 205, 232, 0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            background: rgba(79, 187, 217, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-main {
+            background: rgba(79, 187, 217, 0.1);
+            border-color: var(--glow);
+            box-shadow: 0 0 20px rgba(92, 205, 232, 0.2);
+        }
+
+        /* ===== ЦВЕТА ===== */
+        .colors {
+            background: rgba(0, 29, 34, 0.15);
+            border-top: 1px solid rgba(79, 187, 217, 0.05);
+            border-bottom: 1px solid rgba(79, 187, 217, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .colors::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 29, 34, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--glow);
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--glow), transparent);
+            border-radius: 2px;
+        }
+
+        .section-desc {
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .color-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(92, 205, 232, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .color-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(92, 205, 232, 0.2);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(92, 205, 232, 0.1);
+        }
+
+        .color-card:hover::before {
+            opacity: 1;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 120px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .color-card:hover .color-preview {
+            transform: scale(1.05);
+        }
+
+        .color-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .color-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        /* ===== ТЕКСТЫ ===== */
+        .texts {
+            background: rgba(0, 29, 34, 0.1);
+            position: relative;
+        }
+
+        .texts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .text-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(92, 205, 232, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .text-card:hover::before {
+            left: 100%;
+        }
+
+        .text-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(92, 205, 232, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 50px rgba(92, 205, 232, 0.1);
+        }
+
+        .text-image {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .text-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--glow);
+        }
+
+        .text-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: rgba(79, 187, 217, 0.15);
+            color: var(--glow);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(92, 205, 232, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn:hover {
+            background: rgba(79, 187, 217, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== ФАЙЛЫ ===== */
+        .files {
+            background: rgba(0, 29, 34, 0.15);
+            border-top: 1px solid rgba(79, 187, 217, 0.1);
+            position: relative;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .file-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .file-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(92, 205, 232, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 50px rgba(92, 205, 232, 0.1);
+        }
+
+        .file-icon {
+            font-size: 3rem;
+            color: var(--glow);
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(92, 205, 232, 0.3));
+        }
+
+        .file-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--glow);
+        }
+
+        .file-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        footer {
+            background: var(--deep-dark);
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(79, 187, 217, 0.1);
+            position: relative;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-logo span {
+            color: var(--glow);
+            text-shadow: 0 0 15px rgba(92, 205, 232, 0.5);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .main {
+                padding-top: 120px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 3rem;
+            }
+            
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .avatar {
+                max-width: 350px;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .header-inner {
+                justify-content: center;
+            }
+            
+            .texts-grid,
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin: 1rem auto;
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Парящие частицы -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">markol.<span>brand</span></a>
+            <nav>
+                <a href="#colors">Цвета</a>
+                <a href="#texts">Тексты</a>
+                <a href="#files">Файлы</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Главная С АВОЙ -->
+    <section class="main">
+        <div class="container main-content">
+            <div class="main-text">
+                <h1>markol.<span class="glow">brand</span></h1>
+                <p class="tagline">Просто цвета, которые нравятся. Темное с синим свечением — это мой стиль.</p>
+                <a href="#colors" class="btn">Посмотреть цвета</a>
+                <a href="#files" class="btn btn-main">Скачать файлы</a>
+            </div>
+            <div class="main-image">
+                <div class="avatar-container">
+                    <!-- Ава тут! -->
+                    <img src="ava.jpg" alt="Ава markol.brand" class="avatar">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Цвета -->
+    <section id="colors" class="colors">
+        <div class="container">
+            <h2>Цвета из авы</h2>
+            <p class="section-desc">Те самые цвета, которые используются в аве — черный фон, синее свечение.</p>
+            
+            <div class="colors-grid">
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: var(--black);"></div>
+                    <div class="color-name">Основной черный</div>
+                    <div class="color-code">#000000</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: var(--cat-blue);"></div>
+                    <div class="color-name">Цвет котика</div>
+                    <div class="color-code">#4FBBD9</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: var(--cat-dark);"></div>
+                    <div class="color-name">Темный вариант</div>
+                    <div class="color-code">#3F8290</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: var(--glow);"></div>
+                    <div class="color-name">Свечение</div>
+                    <div class="color-code">#5CCDE8</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: var(--deep-dark);"></div>
+                    <div class="color-name">Для фона</div>
+                    <div class="color-code">#001D22</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Тексты -->
+    <section id="texts" class="texts">
+        <div class="container">
+            <h2>Тексты</h2>
+            <p class="section-desc">Варианты текста markol.brand — с фоном и без.</p>
+            
+            <div class="texts-grid">
+                <div class="text-card">
+                    <img src="textfon.png" alt="Текст с фоном" class="text-image">
+                    <h3>Текст с фоном</h3>
+                    <p class="text-desc">Текст на черном фоне.</p>
+                    <a href="textfon.png" download class="download-btn">Скачать PNG</a>
+                </div>
+                
+                <div class="text-card">
+                    <img src="texxtbezfona.png" alt="Текст без фона" class="text-image">
+                    <h3>Текст без фона</h3>
+                    <p class="text-desc">Текст на прозрачном фоне.</p>
+                    <a href="texxtbezfona.png" download class="download-btn">Скачать PNG</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Файлы -->
+    <section id="files" class="files">
+        <div class="container">
+            <h2>Файлы</h2>
+            <p class="section-desc">Только текстовые файлы, обои и анимация.</p>
+            
+            <div class="files-grid">
+                <div class="file-card">
+                    <div class="file-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Текстовые файлы</h3>
+                    <p class="file-desc">Все варианты текста markol.brand</p>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="textfon.png" download class="download-btn" style="font-size: 0.8rem;">С текстом и фоном</a>
+                        <a href="texxtbezfona.png" download class="download-btn" style="font-size: 0.8rem;">С текстом без фона</a>
+                    </div>
+                </div>
+                
+                <div class="file-card">
+                    <div class="file-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>Обои</h3>
+                    <p class="file-desc">Обои на рабочий стол в стиле авы</p>
+                    <a href="walp.png" download class="download-btn">Скачать PNG</a>
+                </div>
+                
+                <div class="file-card">
+                    <div class="file-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>Анимация</h3>
+                    <p class="file-desc">Анимация со свечением и надписью</p>
+                    <a href="anim%20fullscreen.mp4" download class="download-btn">Скачать MP4</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">markol.<span>brand</span></div>
+            <p style="color: rgba(255, 255, 255, 0.6); max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                Просто мой стиль — темный фон и синее свечение.<br>Ничего лишнего.
+            </p>
+            <div class="footer-text">
+                markol.brand © 2023
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Создание парящих частиц
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Случайная позиция
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Случайный размер
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Случайная прозрачность
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                
+                // Случайная задержка анимации
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Плавный скролл
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if(href === '#') return;
+                
+                const target = document.querySelector(href);
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Эффект при скролле для шапки
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if(window.scrollY > 50) {
+                header.style.background = 'rgba(0, 0, 0, 0.85)';
+                header.style.boxShadow = '0 5px 30px rgba(0, 0, 0, 0.4)';
+                header.style.padding = '0.8rem 0';
+            } else {
+                header.style.background = 'rgba(0, 0, 0, 0.7)';
+                header.style.boxShadow = 'none';
+                header.style.padding = '1.2rem 0';
+            }
+        });
+
+        // Параллакс эффект для авы
+        window.addEventListener('mousemove', (e) => {
+            const avatar = document.querySelector('.avatar');
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+            
+            avatar.style.transform = `translateY(${y}px) translateX(${x}px) rotateX(${y/10}deg) rotateY(${x/10}deg)`;
+        });
+
+        // Анимация для кнопок
+        document.querySelectorAll('.btn, .download-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
